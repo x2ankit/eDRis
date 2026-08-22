@@ -1,0 +1,30 @@
+# MATLAB specific files
+*.mat
+*.asv
+*.m~
+*.mexw64
+*.mexw32
+*.mexa64
+*.mexmaci64
+*.slxc
+slprj/
+*.prj~
+
+# Datasets and large data files
+/datasets/
+*.zip
+*.csv
+*.csv.gz
+
+# Local settings and IDE files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Agent/AI generated temporary files
+scratch/
+.agents/
+
+# Local planning and design files
+sih_26038_Detailed.html
