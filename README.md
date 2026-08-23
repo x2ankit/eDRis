@@ -91,10 +91,16 @@ The complete pipeline is developed utilizing MathWorks enterprise-grade toolboxe
 
 ## Datasets utilized
 
-- [APTOS 2019 Blindness Detection](https://www.kaggle.com/c/aptos2019-blindness-detection)
-- [IDRiD (Indian Diabetic Retinopathy Image Dataset)](https://ieee-dataport.org/open-access/indian-diabetic-retinopathy-image-dataset-idrid)
-- [DRIVE (Vessel Extraction)](https://drive.grand-challenge.org/)
-- [Messidor-2](https://www.adcis.net/en/third-party/messidor2/)
+- **[APTOS 2019 Blindness Detection](https://www.kaggle.com/c/aptos2019-blindness-detection)**
+  - Local Path: `datasets/classification/aptos2019`
+- **[IDRiD (Indian Diabetic Retinopathy Image Dataset)](https://ieee-dataport.org/open-access/indian-diabetic-retinopathy-image-dataset-idrid)**
+  - Segmentation Path: `datasets/segmentation/idrid_segmentation`
+  - Grading Path: `datasets/classification/idrid_grading`
+  - Localization Path: `datasets/extra/idrid_localization`
+- **[Messidor-2](https://www.adcis.net/en/third-party/messidor2/)**
+  - Local Path: `datasets/classification/messidor`
+- **[DRIVE (Vessel Extraction)](https://drive.grand-challenge.org/)**
+  - Local Path: `datasets/extra/drive_vessels`
 
 ## License
 
