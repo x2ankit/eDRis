@@ -89,6 +89,18 @@ The complete pipeline is developed utilizing MathWorks enterprise-grade toolboxe
 - Medical Imaging Toolbox
 - Simulink & SimEvents
 
+## Data Visualizations
+
+To prove our architecture handles real-world medical data, we perform extensive dataset analysis:
+
+![APTOS Class Imbalance](docs/images/imbalance.png)
+*Figure 1: APTOS 2019 Dataset showing severe class imbalance.*
+
+![IDRiD Lesion Mask](docs/images/idrid_overlay.png)
+*Figure 2: Ground-truth microaneurysm masking overlay from IDRiD dataset.*
+
+*(Note: Save your Jupyter Notebook screenshots into `docs/images/` with the filenames `imbalance.png` and `idrid_overlay.png` to display them here!)*
+
 ## Datasets utilized
 
 - **[APTOS 2019 Blindness Detection](https://www.kaggle.com/c/aptos2019-blindness-detection)**
