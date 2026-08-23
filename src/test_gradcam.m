@@ -7,16 +7,14 @@ function test_gradcam(imagePath, modelPath)
     end
     if nargin < 1
         % Default to a sample image if not provided
-        % Assuming the user has a sample image in the aptos directory
-        imagePath = '../datasets/classification/aptos2019/train_images/000c1434d8d7.png';
+        imagePath = fullfile(fileparts(mfilename('fullpath')), '..', 'datasets', 'classification', 'aptos2019', 'train_images', '000c1434d8d7.png');
     end
     
     fprintf('Loading model from %s...\n', modelPath);
     try
         net = importONNXNetwork(modelPath, 'OutputLayerType', 'classification');
-    catch
-        warning('ONNX Model not found at %s. Please train in Colab and download it first. Using untrained ResNet50 for demonstration...', modelPath);
-        net = resnet50; % fallback to raw resnet for code execution safety
+    catch ME
+        error('Failed to import ONNX model:\n%s\n\nEnsure that you have installed the "Deep Learning Toolbox Converter for ONNX Model Format" add-on in MATLAB.', ME.message);
     end
     
     fprintf('Processing test image: %s...\n', imagePath);
