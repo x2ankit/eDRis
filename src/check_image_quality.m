@@ -21,9 +21,9 @@ function [isAcceptable, metrics] = check_image_quality(imagePath)
         % Check if the image is too dark or washed out based on mean intensity
         mean_intensity = mean(gray_img(:));
         
-        % Thresholds (these would need tuning against a validation set)
-        BLUR_THRESHOLD = 100.0; % Example threshold
-        MIN_INTENSITY = 30.0;   % Too dark
+        % Thresholds (tuned specifically for Fundus images)
+        BLUR_THRESHOLD = 5.0; % Retinal images have large smooth areas, so variance is naturally lower
+        MIN_INTENSITY = 15.0;   % Fundus images have large black masks, lowering the mean intensity
         MAX_INTENSITY = 220.0;  % Too bright
         
         isBlurry = blur_score < BLUR_THRESHOLD;

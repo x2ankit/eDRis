@@ -3,7 +3,7 @@
 % Dynamically checks network bandwidth and determines whether to send HD 
 % raw images or compressed features to prevent rural network timeouts.
 
-function [transmitted_payload, compression_ratio] = simulate_bandwidth_controller(image_matrix)
+function [transmitted_payload, compression_ratio] = run_bandwidth_simulation(image_matrix)
     % Simulate network check (in a real scenario, this would ping a server)
     % Let's randomly simulate a connection speed in Mbps (1 to 20 Mbps)
     current_bandwidth_mbps = randi([1, 20]);
