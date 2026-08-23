@@ -45,17 +45,3 @@ We implemented a **Weighted Random Sampler** in PyTorch. It calculates the inver
 
 ### What improved?
 The AI no longer ignores minority classes. It has a significantly higher **Recall** for severe, sight-threatening Diabetic Retinopathy, ensuring no critical patients slip through the cracks.
-
----
-
-## 4. Dual-Branch Pipeline: U-Net Semantic Segmentation
-### Why did we do it?
-Other hackathon projects rely entirely on "Black-Box" classification, or at best, blurry Grad-CAM heatmaps. We wanted to build a "White-Box" system that literally draws precise, pixel-perfect boundaries around microscopic hemorrhages and exudates on the retina, giving doctors undeniable visual proof of the diagnosis.
-
-### How did we do it?
-We wrote a new script (`train_unet_segmentation.py`) that implements a **U-Net Deep Learning Architecture**. 
-- It uses the `idrid_segmentation` dataset, which contains raw images paired with binary pixel masks of microaneurysms.
-- We combined **BCEWithLogitsLoss** (for pixel-level probability) with **Dice Loss** (for object-level intersection accuracy).
-
-### What improved?
-The project is now a true **Dual-Branch System**. Branch 1 grades the severity of the disease (0-4), and Branch 2 explicitly segments the exact biological lesions causing the disease. This is exactly what cutting-edge commercial medical AI systems (like Google Health's ARDA) do.
