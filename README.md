@@ -74,12 +74,14 @@ graph TD
 
 ## ⚙️ Core Modules
 
-### 1. Intelligent Edge (Image Quality Assessment)
-An offline, lightweight screening module that evaluates fundus focus, illumination, and field of view. It applies Contrast Limited Adaptive Histogram Equalization (CLAHE) for borderline images and actively rejects ungradeable photos to save bandwidth.
-
-### 2. Network Orchestration (Simulink)
-Actively monitors available clinic bandwidth. Under robust connections, raw data is transmitted; under 2G/3G degradation, adaptive compression prevents upload failure.
-*(See `simulate_bandwidth_controller.slx`)*
+## 🔥 Core SOTA Features
+- **Multi-Dataset Data Fusion**: Trained dynamically across APTOS 2019, IDRiD, and Messidor for unparalleled real-world robustness.
+- **Handling Class Imbalance**: Built-in Weighted Random Samplers and Focal Loss to ensure high recall on rare, severe (Level 4) cases.
+- **Heavy Augmentation**: Employs PyTorch `torchvision.transforms` (Rotations, Color Jittering, Cropping) to prevent overconfidence and overfitting.
+- **Virtual Edge Bouncer (Layer 1)**: An offline, pre-processing MATLAB module that calculates Laplacian variance to instantly reject blurry or poorly lit images *before* they waste 2G bandwidth.
+- **Simulink Bandwidth Router (Layer 2)**: Dynamically evaluates rural network speeds. If 4G is present, it transmits Raw HD images. If 2G is detected, it compresses images to 15% payload.
+- **Dual-Branch AI (Layer 3)**: A highly-optimized PyTorch model combining classification and semantic segmentation to grade severity (0-4).
+- **Explainable Grad-CAM Dashboard (Layer 4)**: A premium "White-Box" UI that overlays precise heatmaps on microaneurysms, giving remote doctors instant trust in the AI's diagnosis without black-box guessing.
 
 ### 3. Dual-Branch Medical AI
 A custom PyTorch-trained **ResNet-50** exported to ONNX format and deployed in MATLAB.
