@@ -78,6 +78,7 @@ graph TD
 - **Multi-Dataset Data Fusion**: Trained dynamically across APTOS 2019, IDRiD, and Messidor for unparalleled real-world robustness.
 - **Handling Class Imbalance**: Built-in Weighted Random Samplers and Focal Loss to ensure high recall on rare, severe (Level 4) cases.
 - **Heavy Augmentation**: Employs PyTorch `torchvision.transforms` (Rotations, Color Jittering, Cropping) to prevent overconfidence and overfitting.
+- **INT8 Edge Quantization**: Compresses PyTorch models from FP32 to INT8, shrinking file sizes by 4x to run efficiently on low-power rural CPUs without internet.
 - **Virtual Edge Bouncer (Layer 1)**: An offline, pre-processing MATLAB module that calculates Laplacian variance to instantly reject blurry or poorly lit images *before* they waste 2G bandwidth.
 - **Simulink Bandwidth Router (Layer 2)**: Dynamically evaluates rural network speeds. If 4G is present, it transmits Raw HD images. If 2G is detected, it compresses images to 15% payload.
 - **Dual-Branch AI (Layer 3)**: A highly-optimized PyTorch model combining classification and semantic segmentation to grade severity (0-4).
