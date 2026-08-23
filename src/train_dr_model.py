@@ -4,9 +4,12 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms, models
-from PIL import Image
+from PIL import Image, ImageFile
 import pandas as pd
 from tqdm import tqdm
+
+# Handle slightly corrupted/truncated medical images in the APTOS dataset
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 class APTOSDataset(Dataset):
     """
