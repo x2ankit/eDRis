@@ -14,49 +14,110 @@ Copy and paste this entire block of Python code into the first cell of your Cola
 
 ```python
 # --- PART 1: Download the Data ---
+!pip install -q onnx onnxscript
 !pip install -q kaggle
 import os
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms, models
+from PIL import Image
+import pandas as pd
+from tqdm.notebook import tqdm
 
-# Put your kaggle.json credentials here!
+# Your Kaggle credentials
 os.environ['KAGGLE_USERNAME'] = "YOUR_KAGGLE_USERNAME"
 os.environ['KAGGLE_KEY'] = "YOUR_KAGGLE_KEY"
 
 !kaggle competitions download -c aptos2019-blindness-detection
-!unzip -q aptos2019-blindness-detection.zip -d dataset/
+!unzip -qo aptos2019-blindness-detection.zip -d dataset/
 
-# --- PART 2: Train and Export to ONNX ---
-import torch
-import torchvision.models as models
-import torch.nn as nn
+# --- PART 2: The Training Architecture ---
+print("Setting up DataLoaders...")
+
+class APTOSDataset(Dataset):
+    def __init__(self, csv_file, root_dir, transform=None):
+        self.annotations = pd.read_csv(csv_file)
+        self.root_dir = root_dir
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.annotations)
+
+    def __getitem__(self, index):
+        img_id = self.annotations.iloc[index, 0]
+        img_path = os.path.join(self.root_dir, f"{img_id}.png")
+        image = Image.open(img_path).convert("RGB")
+        y_label = torch.tensor(int(self.annotations.iloc[index, 1]))
+        if self.transform:
+            image = self.transform(image)
+        return (image, y_label)
+
+transform = transforms.Compose([
+    transforms.Resize((512, 512)),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+# Create Dataset and DataLoader
+dataset = APTOSDataset(csv_file='dataset/train.csv', root_dir='dataset/train_images', transform=transform)
+train_loader = DataLoader(dataset, batch_size=16, shuffle=True, num_workers=2)
 
 print("Building ResNet-50 for 5-Class DR Grading...")
-# Load a pre-trained ResNet-50
 model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
-
-# Change the final layer to output 5 classes instead of 1000
 num_ftrs = model.fc.in_features
 model.fc = nn.Linear(num_ftrs, 5)
 
-# (In a full training run, you would load your Dataset and run the training loop here)
-# For the sake of the hackathon export bridge, we assume the model is trained.
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = model.to(device)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.0001)
+
+# --- PART 3: The Actual Training Loop ---
+NUM_EPOCHS = 5
+print(f"Starting Training for {NUM_EPOCHS} epochs on {device}...")
+
+for epoch in range(NUM_EPOCHS):
+    model.train()
+    running_loss = 0.0
+    correct = 0
+    total = 0
+    
+    progress_bar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{NUM_EPOCHS}")
+    for images, labels in progress_bar:
+        images, labels = images.to(device), labels.to(device)
+        
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        
+        running_loss += loss.item()
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+        
+        progress_bar.set_postfix({'Loss': loss.item(), 'Acc': 100 * correct / total})
+
+# --- PART 4: Export to ONNX Format ---
+print("Exporting fully trained model to ONNX format...")
 model.eval()
+dummy_input = torch.randn(1, 3, 512, 512).to(device)
 
-# --- PART 3: Export to ONNX Format ---
-print("Exporting model to ONNX format for MATLAB...")
-# Create a dummy input tensor matching the image size (BatchSize, Channels, Height, Width)
-dummy_input = torch.randn(1, 3, 512, 512)
-
-# Export the ONNX file
 torch.onnx.export(model,               
                   dummy_input,         
                   "dr_resnet50.onnx",   
                   export_params=True,  
-                  opset_version=11,    
+                  opset_version=14,    
                   do_constant_folding=True, 
                   input_names = ['input'],   
                   output_names = ['output'])
 
-print("Export Complete! You can now download dr_resnet50.onnx from the Colab file browser.")
+print("Export Complete! You can now download dr_resnet50.onnx and dr_resnet50.onnx.data from the Colab file browser.")
 ```
 
 ## Step 3: Bring it back to eDRis
