@@ -3,7 +3,7 @@
 
 function test_gradcam(imagePath, modelPath)
     if nargin < 2
-        modelPath = '../models/dr_resnet50.onnx'; % Default path for Colab ONNX export
+        modelPath = fullfile(fileparts(mfilename('fullpath')), '..', 'models', 'dr_resnet50.onnx'); % Robust path
     end
     if nargin < 1
         % Default to a sample image if not provided
