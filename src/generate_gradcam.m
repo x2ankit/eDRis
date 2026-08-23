@@ -16,8 +16,12 @@ function [heatmap, overlay, predictedClass, confidence] = generate_gradcam(net, 
     img_resized = imresize(img, inputSize);
     
     % 2. Get the prediction and confidence score
-    [predictedClass, scores] = classify(net, img_resized);
-    confidence = max(scores) * 100;
+    [predictedClass, rawScores] = classify(net, img_resized);
+    
+    % PyTorch exports raw logits, so we apply a Softmax to get probabilities (0-1)
+    expScores = exp(rawScores - max(rawScores)); % For numerical stability
+    probabilities = expScores / sum(expScores);
+    confidence = max(probabilities) * 100;
     
     % 3. Generate the Grad-CAM map
     % MATLAB's gradCAM function automatically identifies the last spatial feature layer.

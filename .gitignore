@@ -29,3 +29,13 @@ scratch/
 # Local planning and design files
 sih_26038_Detailed.html
 checklist.md
+
+# Exclude large ONNX models
+models/
+*.onnx*
+
+# Secrets
+kaggle.json
+
+# Jupyter
+.ipynb_checkpoints/

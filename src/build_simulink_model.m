@@ -40,7 +40,7 @@ function build_simulink_model()
     add_line(mdl, 'Bandwidth_Router/1', 'Transmitted_Payload/1', 'autorouting', 'on'); % Output
     
     % Save it
-    savePath = fullfile(pwd, 'src', [mdl '.slx']);
+    savePath = fullfile(fileparts(mfilename('fullpath')), [mdl '.slx']);
     save_system(mdl, savePath);
     
     fprintf('Success! Simulink model saved to: %s\n', savePath);
