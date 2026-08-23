@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eDRis: Final 10-Day Execution Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent: #38bdf8;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 15px;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 800;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .step-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .step-content li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .step-content li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-family: monospace;
+            color: #0f172a;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 5px;
+            border: 1px solid #cbd5e1;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-left: 10px;
+        }
+        
+        .badge-cloud { background: #dbeafe; color: #1e40af; }
+        .badge-edge { background: #dcfce7; color: #166534; }
+        .badge-pitch { background: #fef3c7; color: #92400e; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>eDRis: Final Execution Plan</h1>
+        <p>The codebase is 100% complete. Follow this strategic 10-day roadmap to finalize model training and prepare for a dominating Hackathon pitch.</p>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-card">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <h2 class="step-title">Train the SOTA Models (Cloud GPU) <span class="badge badge-cloud">Cloud Execution</span></h2>
+        </div>
+        <div class="step-content">
+            <p>Your laptop CPU will take days to process the massive merged datasets. You must use a free cloud GPU environment like Google Colab or Kaggle.</p>
+            <ul>
+                <li><strong>Upload Data:</strong> Zip and upload your <code>datasets/</code> and <code>src/</code> folders to Google Colab.</li>
+                <li><strong>Train Classifier:</strong> Run the PyTorch classification script to train the multi-dataset ResNet/EfficientNet. This uses Focal Loss and Heavy Augmentation to stop overconfidence.
+                    <br><span class="code-block">!python src/train_sota_classifier.py</span>
+                </li>
+                <li><strong>Train U-Net Segmenter:</strong> Run the dual-branch segmentation script to train the AI to draw pixel-perfect boundaries around microaneurysms using BCE-Dice Loss.
+                    <br><span class="code-block">!python src/train_unet_segmentation.py</span>
+                </li>
+                <li><strong>Download Weights:</strong> Once finished, download the massive <code>.pth</code> model files back to your local <code>models/</code> folder.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <h2 class="step-title">Apply INT8 Edge Quantization <span class="badge badge-edge">Edge Deployment</span></h2>
+        </div>
+        <div class="step-content">
+            <p>To prove to the judges that this architecture can run in a rural clinic without internet, we must compress the PyTorch models from FP32 down to INT8.</p>
+            <ul>
+                <li><strong>Execute Quantization:</strong> Run the quantization script locally on your machine.
+                    <br><span class="code-block">python src/quantize_models.py</span>
+                </li>
+                <li><strong>Verify Compression:</strong> Check your <code>models/</code> folder. You should see new <code>_quantized_int8.pth</code> files that are nearly 4x smaller than the originals.</li>
+                <li><strong>Link to MATLAB:</strong> Ensure your final ONNX export points to these highly optimized INT8 weights for the MATLAB UI.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+        <div class="step-header">
+            <div class="step-number">3</div>
+            <h2 class="step-title">Assemble the Pitch Deck <span class="badge badge-pitch">Presentation</span></h2>
+        </div>
+        <div class="step-content">
+            <p>The code is done. Now you must sell the vision. Use a premium design tool like Canva or PowerPoint.</p>
+            <ul>
+                <li><strong>Use the Outline:</strong> Follow the exact narrative structure written in <code>docs/pitch_deck_outline.md</code>. Focus heavily on the "Infrastructure Problem" (Bandwidth & Blur).</li>
+                <li><strong>Insert Assets:</strong> Add the high-quality screenshots you generated (the Simulink orchestration blocks, the Grad-CAM heatmaps, and the 4-step flowchart).</li>
+                <li><strong>Highlight White-Box AI:</strong> Explicitly mention that you built a "Dual-Branch System" that doesn't just guess severity, but literally segments the biological lesions for doctor verification.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+        <div class="step-header">
+            <div class="step-number">4</div>
+            <h2 class="step-title">Rehearse the Live MATLAB Demo <span class="badge badge-pitch">Presentation</span></h2>
+        </div>
+        <div class="step-content">
+            <p>A live demo is risky but guarantees a win if executed flawlessly. Practice the exact sequence of clicks.</p>
+            <ul>
+                <li><strong>Launch Protocol:</strong> Open the MATLAB Command Window (NOT PowerShell) and type:
+                    <br><span class="code-block">virtual_clinic_app</span>
+                </li>
+                <li><strong>The Rejection Demo:</strong> First, upload a blurry/dark image to show how Layer 1 (The Bouncer) instantly rejects it to save bandwidth.</li>
+                <li><strong>The Success Demo:</strong> Next, upload a clean retinal scan. Show the judges the "Scanning..." animations, the Simulink bandwidth simulation, and the final <strong>Premium Clinical Dashboard</strong> popup featuring the Grad-CAM overlay and realistic confidence metrics.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
