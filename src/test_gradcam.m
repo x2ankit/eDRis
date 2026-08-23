@@ -3,7 +3,7 @@
 
 function test_gradcam(imagePath, modelPath)
     if nargin < 2
-        modelPath = '../models/dr_resnet50.mat'; % Default path
+        modelPath = '../models/dr_resnet50.onnx'; % Default path for Colab ONNX export
     end
     if nargin < 1
         % Default to a sample image if not provided
@@ -13,10 +13,9 @@ function test_gradcam(imagePath, modelPath)
     
     fprintf('Loading model from %s...\n', modelPath);
     try
-        loaded = load(modelPath);
-        net = loaded.net;
+        net = importONNXNetwork(modelPath, 'OutputLayerType', 'classification');
     catch
-        warning('Model not found at %s. Please train the model first. Using untrained ResNet50 for demonstration...', modelPath);
+        warning('ONNX Model not found at %s. Please train in Colab and download it first. Using untrained ResNet50 for demonstration...', modelPath);
         net = resnet50; % fallback to raw resnet for code execution safety
     end
     
