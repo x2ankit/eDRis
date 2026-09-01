@@ -75,20 +75,26 @@ graph TD
 ## ⚙️ Core Modules
 
 ## 🔥 Core SOTA Features
-- **Multi-Dataset Data Fusion**: Trained dynamically across APTOS 2019, IDRiD, and Messidor for unparalleled real-world robustness.
-- **Handling Class Imbalance**: Built-in Weighted Random Samplers and Focal Loss to ensure high recall on rare, severe (Level 4) cases.
-- **Heavy Augmentation**: Employs PyTorch `torchvision.transforms` (Rotations, Color Jittering, Cropping) to prevent overconfidence and overfitting.
-- **INT8 Edge Quantization**: Compresses PyTorch models from FP32 to INT8, shrinking file sizes by 4x to run efficiently on low-power rural CPUs without internet.
-- **Virtual Edge Bouncer (Layer 1)**: An offline, pre-processing MATLAB module that calculates Laplacian variance to instantly reject blurry or poorly lit images *before* they waste 2G bandwidth.
-- **Simulink Bandwidth Router (Layer 2)**: Dynamically evaluates rural network speeds. If 4G is present, it transmits Raw HD images. If 2G is detected, it compresses images to 15% payload.
-- **Dual-Branch AI (Layer 3)**: A highly-optimized PyTorch model combining classification and semantic segmentation to grade severity (0-4).
-- **Explainable Grad-CAM Dashboard (Layer 4)**: A premium "White-Box" UI that overlays precise heatmaps on microaneurysms, giving remote doctors instant trust in the AI's diagnosis without black-box guessing.
+- **Multi-Dataset Data Fusion**: Trained dynamically across APTOS 2019, IDRiD, and DRIVE for unparalleled real-world robustness.
+- **Handling Class Imbalance**: Built-in Weighted Random Samplers and Dice Loss to ensure high recall on rare, severe (Level 4) cases.
+- **Data-Driven Quality Gatekeeper (Phase 2)**: An offline Python preprocessing module that calculates Laplacian variance and mean pixel intensity. It rejects ungradeable images based on strict percentiles and automatically rescues borderline images via CLAHE.
+- **Simulink Telemedicine Workflow (Phase 5)**: Dynamically evaluates rural network speeds and queue sizes, processing real metrics to simulate rural clinic scaling.
+- **Explainable U-Net Dashboard (Phase 4)**: A premium "White-Box" UI that overlays precise U-Net semantic segmentation maps on microaneurysms, giving remote doctors instant trust in the AI's ResNet diagnosis without black-box guessing.
 
-### 3. Dual-Branch Medical AI
-A custom PyTorch-trained **ResNet-50** exported to ONNX format and deployed in MATLAB.
-- **Accuracy Achieved:** 91% (5 Epochs)
-- **Branch 1:** Extracts and segments clinically relevant structures.
-- **Branch 2:** Grades severity (Levels 0-4) using the International Clinical DR Severity scale.
+### Phase 1: Baseline Classification
+A custom PyTorch-trained **ResNet-18/50** exported to ONNX format.
+- **Goal:** Predict the severity of Diabetic Retinopathy (Levels 0-4).
+- **Target:** Sensitivity >90% and Specificity >85% for Referable DR (Level 2+).
+
+### Phase 2: Image Quality Gatekeeper
+- Automatically evaluates image focus using Variance of Laplacian.
+- Evaluates illumination using Mean Pixel Intensity.
+- Applies **CLAHE (Contrast Limited Adaptive Histogram Equalization)** to salvage poorly lit but in-focus images.
+
+### Phase 3: Lesion & Vessel Segmentation
+A PyTorch-trained **U-Net** architecture.
+- **Lesions:** Trained on IDRiD to isolate Microaneurysms, Hemorrhages, and Hard/Soft Exudates.
+- **Vessels:** Trained on the DRIVE dataset to accurately map retinal vasculature.
 
 ### 4. White-Box Explainability (Clinical Dashboard)
 Utilizes MATLAB's **Grad-CAM** mapping to highlight lesion-level evidence, allowing remote ophthalmologists to confidently validate automated results in under 30 seconds.
