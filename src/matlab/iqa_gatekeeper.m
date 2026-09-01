@@ -17,6 +17,16 @@ function [processed_img, is_accepted, metrics, message] = iqa_gatekeeper(img_pat
         gray_img = img;
     end
     
+    % 1.5 Denoising (SIH Requirement)
+    % Apply median filter to remove salt-and-pepper sensor noise
+    gray_img = medfilt2(gray_img, [3 3]);
+    
+    % 1.7 Field of View (FOV) Validation (SIH Requirement)
+    % A valid fundus image should have a large illuminated circular area.
+    % We threshold the image to find the retina mask.
+    retina_mask = gray_img > 10; % Background is usually near 0
+    fov_ratio = sum(retina_mask(:)) / numel(retina_mask);
+    
     % 2. Calculate Laplacian Variance (Focus Metric)
     lap = fspecial('laplacian');
     img_lap = imfilter(double(gray_img), lap, 'replicate');
@@ -35,6 +45,13 @@ function [processed_img, is_accepted, metrics, message] = iqa_gatekeeper(img_pat
     processed_img = img;
     
     % 4. Evaluation Logic
+    if fov_ratio < 0.20
+        % Reject due to improper FOV
+        is_accepted = false;
+        message = sprintf('REJECTED: Field of View is inadequate (FOV: %.2f%%). Please align the camera.', fov_ratio * 100);
+        return;
+    end
+    
     if variance_of_laplacian < BLUR_THRESHOLD
         % Reject immediately due to severe blur
         is_accepted = false;
