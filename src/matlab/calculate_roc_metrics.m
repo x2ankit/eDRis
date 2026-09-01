@@ -4,25 +4,35 @@ function calculate_roc_metrics(true_labels, predicted_scores)
 % >90% Sensitivity and >85% Specificity for Referable DR (Level 2+).
 % Uses the Statistics and Machine Learning Toolbox.
 
-    % If no arguments provided, generate mock validation data for demonstration
+    csv_path = '..\..\results\validation_results.csv';
+    
     if nargin == 0
-        fprintf('No validation data provided. Generating simulated inference results...\n');
-        num_samples = 1000;
-        
-        % True labels: 0=No DR, 1=Mild, 2=Moderate, 3=Severe, 4=Proliferative
-        % Roughly 27% are referable (Level 2+)
-        true_labels = randsample(0:4, num_samples, true, [0.4 0.33 0.15 0.08 0.04]);
-        
-        % Simulated model scores (probabilities for being Level 2+)
-        is_referable_true = (true_labels >= 2);
-        
-        % Generate scores that comfortably beat the 90%/85% benchmark
-        predicted_scores = zeros(num_samples, 1);
-        predicted_scores(is_referable_true) = normrnd(0.85, 0.1, [sum(is_referable_true), 1]);
-        predicted_scores(~is_referable_true) = normrnd(0.15, 0.1, [sum(~is_referable_true), 1]);
-        
-        % Bound between 0 and 1
-        predicted_scores = max(0, min(1, predicted_scores));
+        if isfile(csv_path)
+            fprintf('Found real validation results at %s. Loading...\n', csv_path);
+            opts = detectImportOptions(csv_path);
+            data = readtable(csv_path, opts);
+            
+            true_labels = data.True_Label;
+            predicted_scores = data.Predicted_Prob_Level_2_Plus;
+        else
+            fprintf('No validation data found at %s. Generating simulated inference results...\n', csv_path);
+            num_samples = 1000;
+            
+            % True labels: 0=No DR, 1=Mild, 2=Moderate, 3=Severe, 4=Proliferative
+            % Roughly 27% are referable (Level 2+)
+            true_labels = randsample(0:4, num_samples, true, [0.4 0.33 0.15 0.08 0.04]);
+            
+            % Simulated model scores (probabilities for being Level 2+)
+            is_referable_true = (true_labels >= 2);
+            
+            % Generate scores that comfortably beat the 90%/85% benchmark
+            predicted_scores = zeros(num_samples, 1);
+            predicted_scores(is_referable_true) = normrnd(0.85, 0.1, [sum(is_referable_true), 1]);
+            predicted_scores(~is_referable_true) = normrnd(0.15, 0.1, [sum(~is_referable_true), 1]);
+            
+            % Bound between 0 and 1
+            predicted_scores = max(0, min(1, predicted_scores));
+        end
     end
     
     % Binarize Ground Truth: Referable DR is Level 2, 3, or 4.
