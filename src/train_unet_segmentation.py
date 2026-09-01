@@ -191,8 +191,19 @@ def train_unet():
             
     # Save the segmentation model
     os.makedirs('../models', exist_ok=True)
-    torch.save(model.state_dict(), '../models/unet_segmentation.pth')
-    print("Saved SOTA U-Net Model to models/unet_segmentation.pth")
+    torch.save(model.state_dict(), '../models/unet_segmentation_MA.pth')
+    print("Saved SOTA U-Net Model to models/unet_segmentation_MA.pth")
+    
+    # Export to ONNX for MATLAB
+    dummy_input = torch.randn(1, 3, 256, 256, device=device)
+    onnx_path = '../models/unet_segmentation_MA.onnx'
+    torch.onnx.export(model, dummy_input, onnx_path, 
+                      export_params=True, 
+                      opset_version=11, 
+                      do_constant_folding=True, 
+                      input_names=['input'], 
+                      output_names=['output'])
+    print(f"ONNX Model saved to {onnx_path} for MATLAB/Simulink!")
 
 if __name__ == '__main__':
     import multiprocessing
