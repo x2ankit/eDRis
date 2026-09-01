@@ -16,13 +16,13 @@ function virtual_clinic_app()
     errCol      = '#F7768E';  % Neon red
     
     % Create the main UI figure
-    fig = uifigure('Name', 'eDRis - Rural Clinic Dashboard', 'Position', [100 100 900 650]);
+    fig = uifigure('Name', 'eDRis - Rural Clinic Dashboard', 'Position', [100 100 900 780]);
     fig.Color = bgColor;
     
     % --- Grid Layout ---
-    % Create a 3x2 grid to make the UI responsive
-    gl = uigridlayout(fig, [3, 2]);
-    gl.RowHeight = {60, '1x', 150};
+    % Create a 4x2 grid to make the UI responsive
+    gl = uigridlayout(fig, [4, 2]);
+    gl.RowHeight = {60, '1x', 150, 100};
     gl.ColumnWidth = {'1x', 350};
     gl.BackgroundColor = bgColor;
     
@@ -38,7 +38,9 @@ function virtual_clinic_app()
     pnlImage.Layout.Row = 2;
     pnlImage.Layout.Column = 1;
     
-    ax = uiaxes(pnlImage, 'Position', [20 20 480 380]);
+    glImage = uigridlayout(pnlImage, [1 1]);
+    glImage.Padding = [10 10 10 10];
+    ax = uiaxes(glImage);
     ax.XColor = 'none'; ax.YColor = 'none';
     ax.Color = panelColor;
     title(ax, 'Awaiting Fundus Scan...', 'Color', textColor, 'FontSize', 14);
@@ -76,12 +78,53 @@ function virtual_clinic_app()
         'Position', [65 20 220 50], ...
         'ButtonPushedFcn', @(btn,event) uploadImage());
         
+    % --- Regional Report Panel (Row 4) ---
+    pnlReport = uipanel(gl, 'Title', 'REGIONAL LANGUAGE REPORT & AUDIO', ...
+        'BackgroundColor', panelColor, 'ForegroundColor', accentColor, ...
+        'FontWeight', 'bold', 'FontSize', 12, 'BorderType', 'none');
+    pnlReport.Layout.Row = 4;
+    pnlReport.Layout.Column = [1 2];
+    
+    ddLang = uidropdown(pnlReport, 'Items', {'English (en)', 'Hindi (hi)', 'Bengali (bn)', 'Tamil (ta)', 'Odia (or)'}, ...
+        'ItemsData', {'en', 'hi', 'bn', 'ta', 'or'}, ...
+        'Position', [20 20 150 30], 'BackgroundColor', bgColor, 'FontColor', textColor, ...
+        'ValueChangedFcn', @(dd,event) updateReportLanguage());
+    
+    txtReport = uitextarea(pnlReport, 'Position', [190 10 670 60], ...
+        'BackgroundColor', bgColor, 'FontColor', textColor, 'FontSize', 14, ...
+        'Value', 'Awaiting scan results...', 'Editable', 'off');
+        
+    currentEnglishReport = '';
+
     % --- Bottom Left Footer ---
     pnlFooter = uipanel(gl, 'BackgroundColor', bgColor, 'BorderType', 'none');
     pnlFooter.Layout.Row = 3;
     pnlFooter.Layout.Column = 1;
     uilabel(pnlFooter, 'Text', 'MathWorks SIH26038 | eDRis Telemedicine Pipeline', ...
         'FontColor', '#565F89', 'FontSize', 12, 'Position', [20 20 400 30]);
+
+    function updateReportLanguage()
+        if isempty(currentEnglishReport)
+            return;
+        end
+        langCode = ddLang.Value;
+        txtReport.Value = 'Translating and generating audio...';
+        drawnow;
+        
+        % Escape quotes for shell
+        safeText = strrep(currentEnglishReport, '"', '\"');
+        
+        % Call Python script
+        pyScript = fullfile(appDir, '..', 'src', 'regional_reporter.py');
+        cmd = sprintf('python "%s" %s "%s"', pyScript, langCode, safeText);
+        [status, result] = system(cmd);
+        
+        if status == 0
+            txtReport.Value = result;
+        else
+            txtReport.Value = ['Error generating report: ', result];
+        end
+    end
 
     function playAnimation(labelObj, baseText, color)
         labelObj.FontColor = color;
@@ -99,12 +142,15 @@ function virtual_clinic_app()
         lblNetwork.Text = '2. Simulink Bandwidth: Standby'; lblNetwork.FontColor = textColor;
         lblDiagnosis.Text = '3. Cloud AI Diagnosis: Standby'; lblDiagnosis.FontColor = textColor;
         lblAction.Text = 'Triage Status: PROCESSING...'; lblAction.FontColor = warnCol;
+        txtReport.Value = 'Processing...';
+        currentEnglishReport = '';
         title(ax, 'Processing Fundus Scan...', 'Color', textColor);
         cla(ax);
         
         [file, path] = uigetfile({'*.jpg;*.png;*.tif', 'Image Files'});
         if isequal(file,0)
             lblAction.Text = 'Triage Status: CANCELLED';
+            txtReport.Value = 'Awaiting scan results...';
             title(ax, 'Awaiting Fundus Scan...', 'Color', textColor);
             return; 
         end
@@ -124,6 +170,8 @@ function virtual_clinic_app()
                 lblQuality.FontColor = errCol;
                 lblAction.Text = 'Triage Status: RECAPTURE REQUIRED';
                 lblAction.FontColor = errCol;
+                currentEnglishReport = 'The image failed the Edge Quality check. It is too blurry or dark. Please recapture the image.';
+                updateReportLanguage();
                 uialert(fig, 'The image failed the Edge Quality check. It is too blurry or dark. Please recapture.', 'Scan Rejected');
                 return;
             else
@@ -161,9 +209,13 @@ function virtual_clinic_app()
             if strcmp(char(predictedClass), '0') || strcmp(char(predictedClass), '1')
                 lblAction.Text = 'Triage Status: AUTO-CLEARED (Healthy)';
                 lblAction.FontColor = successCol;
+                currentEnglishReport = sprintf('The diagnosis is Level %s. The patient is healthy and auto-cleared.', char(predictedClass));
+                updateReportLanguage();
             else
                 lblAction.Text = 'Triage Status: FLAGGED FOR DOCTOR REVIEW';
                 lblAction.FontColor = errCol;
+                currentEnglishReport = sprintf('The diagnosis is Level %s Diabetic Retinopathy. The patient has been added to the doctor''s remote queue.', char(predictedClass));
+                updateReportLanguage();
                 
                 title(ax, 'VASCULAR LESION LOCALIZATION (GRAD-CAM)', 'Color', accentColor);
                 

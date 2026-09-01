@@ -61,9 +61,10 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     
-    img_dir = 'datasets/classification/aptos2019/train_images'
-    train_csv = 'datasets/classification/aptos2019/splits/train_split.csv'
-    val_csv = 'datasets/classification/aptos2019/splits/val_split.csv'
+    # Define dataset paths
+    img_dir = 'datasets/1. Classification - APTOS/train_images'
+    train_csv = 'datasets/1. Classification - APTOS/splits/train_split.csv'
+    val_csv = 'datasets/1. Classification - APTOS/splits/val_split.csv'
     
     if not os.path.exists(train_csv):
         print(f"Error: {train_csv} not found.")
