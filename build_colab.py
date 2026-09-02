@@ -15,9 +15,18 @@ code_1 = '''
 import os
 import getpass
 
+print("Upgrading Kaggle CLI to support modern API Tokens...")
+!pip install --upgrade kaggle -q
+
 print("Enter your Kaggle API Token (KGAT_...):")
 kaggle_token = getpass.getpass()
 os.environ['KAGGLE_API_TOKEN'] = kaggle_token
+
+# Also write to file for strict CLI fallback
+os.makedirs('/root/.kaggle', exist_ok=True)
+with open('/root/.kaggle/access_token', 'w') as f:
+    f.write(kaggle_token.strip())
+os.chmod('/root/.kaggle/access_token', 0o600)
 
 print("Downloading APTOS 2019 Dataset...")
 !kaggle competitions download -c aptos2019-blindness-detection
