@@ -12,15 +12,12 @@ Please upload your `kaggle.json` file when prompted.
 '''
 
 code_1 = '''
-from google.colab import files
 import os
+import getpass
 
-print("Upload your kaggle.json file:")
-uploaded = files.upload()
-
-!mkdir -p ~/.kaggle
-!cp kaggle.json ~/.kaggle/
-!chmod 600 ~/.kaggle/kaggle.json
+print("Enter your Kaggle API Token (KGAT_...):")
+kaggle_token = getpass.getpass()
+os.environ['KAGGLE_API_TOKEN'] = kaggle_token
 
 print("Downloading APTOS 2019 Dataset...")
 !kaggle competitions download -c aptos2019-blindness-detection
