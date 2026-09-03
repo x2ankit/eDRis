@@ -47,10 +47,10 @@ function [processed_img, is_accepted, metrics, message] = iqa_gatekeeper(img_pat
     processed_img = img;
     
     % 4. Evaluation Logic
-    if fov_ratio < 0.20
-        % Reject due to improper FOV
+    if fov_ratio < 0.20 || fov_ratio > 0.90
+        % Reject due to improper FOV (either too small, or a full-bleed non-fundus image like a desktop screenshot)
         is_accepted = false;
-        message = sprintf('REJECTED: Field of View is inadequate (FOV: %.2f%%). Please align the camera.', fov_ratio * 100);
+        message = sprintf('REJECTED: Invalid Field of View (FOV: %.2f%%). Image does not appear to be a circular retinal scan.', fov_ratio * 100);
         return;
     end
     
@@ -61,8 +61,8 @@ function [processed_img, is_accepted, metrics, message] = iqa_gatekeeper(img_pat
         return;
     end
     
-    if variance_of_laplacian > 5000
-        % Reject random noise or non-retinal images (they have massive variance)
+    if variance_of_laplacian > 1000
+        % Reject random noise, text, or non-retinal images (they have massive edge variance)
         is_accepted = false;
         message = sprintf('REJECTED: Image appears to be random noise or out of context (Variance: %.2f).', variance_of_laplacian);
         return;
