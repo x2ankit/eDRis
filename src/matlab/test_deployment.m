@@ -7,14 +7,22 @@ clc; clear; close all;
 fprintf('=== eDRis MATLAB Deployment Pipeline ===\n\n');
 
 % 1. Pick a test image (Simulating rural clinic capture)
-% For testing, we use one of our previously processed/test images or any valid dataset image
-img_path = '..\..\datasets\1. Classification - APTOS\train_images\000c1434d8d7.png';
+% Open an interactive file dialog so the doctor can upload a fundus image
+fprintf('Opening file dialog to upload a fundus image...\n');
+[file, path] = uigetfile({'*.png;*.jpg;*.jpeg', 'Image Files (*.png, *.jpg, *.jpeg)'}, 'Upload Rural Fundus Image');
 
-% Fallback if file doesn't exist (just to ensure script doesn't crash if they haven't downloaded it)
+if isequal(file, 0)
+    fprintf('Upload canceled by user. Falling back to default test image...\n');
+    img_path = '..\..\datasets\1. Classification - APTOS\train_images\000c1434d8d7.png';
+else
+    img_path = fullfile(path, file);
+end
+
 if ~isfile(img_path)
-    fprintf('Test image not found at %s. Please update the img_path variable to a valid image.\n', img_path);
+    fprintf('Test image not found at %s.\n', img_path);
     return;
 end
+fprintf('Processing Image: %s\n', img_path);
 
 fprintf('1. Running Phase 1 & 2: Image Quality Gatekeeper...\n');
 try
