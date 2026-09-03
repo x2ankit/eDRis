@@ -12,8 +12,8 @@ function virtual_clinic_app()
     
     % --- Sidebar ---
     app.sidebar = uipanel(app.mainGrid, 'BackgroundColor', [0.1 0.15 0.25], 'BorderType', 'none');
-    app.sideGrid = uigridlayout(app.sidebar, [4, 1]);
-    app.sideGrid.RowHeight = {100, 60, 60, '1x'};
+    app.sideGrid = uigridlayout(app.sidebar, [5, 1]);
+    app.sideGrid.RowHeight = {100, 60, 60, 60, '1x'};
     app.sideGrid.BackgroundColor = [0.1 0.15 0.25]; % Force dark sidebar
     
     % Logo / Branding
@@ -29,6 +29,11 @@ function virtual_clinic_app()
     app.btnVal = uibutton(app.sideGrid, 'Text', '📊 View Clinical Validation', ...
         'FontSize', 12, 'FontWeight', 'bold', 'BackgroundColor', [0.3 0.4 0.6], 'FontColor', [1 1 1]);
     app.btnVal.ButtonPushedFcn = @(~, ~) showValidationDashboard();
+    
+    % Telemedicine Simulation Button
+    app.btnSim = uibutton(app.sideGrid, 'Text', '🌐 Run Network Simulation', ...
+        'FontSize', 12, 'FontWeight', 'bold', 'BackgroundColor', [0.6 0.3 0.2], 'FontColor', [1 1 1]);
+    app.btnSim.ButtonPushedFcn = @(~, ~) run_telemedicine_simulation();
     
     % --- Main Dashboard Area ---
     app.dashGrid = uigridlayout(app.mainGrid, [3, 3]);
