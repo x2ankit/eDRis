@@ -3,6 +3,7 @@ function run_telemedicine_simulation()
     % Simulates Telemedicine Bandwidth & Queue Bottlenecks
     
     app.fig = uifigure('Name', 'eDRis: Rural Telemedicine Network Simulation', 'Position', [200, 200, 1000, 650], 'Color', [1 1 1]);
+    movegui(app.fig, 'center');
     
     mgl = uigridlayout(app.fig, [3, 1]);
     mgl.RowHeight = {100, 80, '1x'};
