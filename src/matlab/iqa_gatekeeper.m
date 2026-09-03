@@ -37,7 +37,8 @@ function [processed_img, is_accepted, metrics, message] = iqa_gatekeeper(img_pat
     mean_intensity = mean2(denoised_img);
     
     % Pre-defined Statistical Thresholds (Derived from Python Script)
-    BLUR_THRESHOLD = 4.49;
+    % Adjusted for clinical realism (some referable cases are slightly out of focus)
+    BLUR_THRESHOLD = 2.50;
     DARK_THRESHOLD = 37.49;
     BRIGHT_THRESHOLD = 92.90;
     
