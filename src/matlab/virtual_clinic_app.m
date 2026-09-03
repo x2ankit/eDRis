@@ -41,7 +41,8 @@ function virtual_clinic_app()
     app.btnSim.ButtonPushedFcn = @(~, ~) run_telemedicine_simulation();
     
     % Regional Language Selector
-    uilabel(app.sideGrid, 'Text', 'ASHA Worker Language:', 'FontColor', [0.6 0.6 0.6], 'FontWeight', 'bold', 'VerticalAlignment', 'bottom').Layout.Row = 5;
+    lblLang = uilabel(app.sideGrid, 'Text', 'ASHA Worker Language:', 'FontColor', [0.6 0.6 0.6], 'FontWeight', 'bold', 'VerticalAlignment', 'bottom');
+    lblLang.Layout.Row = 5;
     app.ddLang = uidropdown(app.sideGrid, 'Items', {'English', 'Hindi', 'Bengali'}, ...
         'BackgroundColor', [0.1 0.15 0.22], 'FontColor', [0.8 0.8 0.8]);
     app.ddLang.Layout.Row = 6;
@@ -69,8 +70,10 @@ function virtual_clinic_app()
     tgl.RowHeight = {'1x', '1.5x', '1.5x'};
     tgl.BackgroundColor = [0.1 0.15 0.22];
     
-    uilabel(tgl, 'Text', 'eDRis Clinical Dashboard', 'FontSize', 24, 'FontWeight', 'bold', 'FontColor', [0.9 0.9 0.9]).Layout.Row = 1;
-    uilabel(tgl, 'Text', 'AI Diagnostic Pipeline Active', 'FontSize', 12, 'FontWeight', 'bold', 'FontColor', [0.4 0.6 0.6]).Layout.Row = 2;
+    lblDashTitle = uilabel(tgl, 'Text', 'eDRis Clinical Dashboard', 'FontSize', 24, 'FontWeight', 'bold', 'FontColor', [0.9 0.9 0.9]);
+    lblDashTitle.Layout.Row = 1;
+    lblDashSub = uilabel(tgl, 'Text', 'AI Diagnostic Pipeline Active', 'FontSize', 12, 'FontWeight', 'bold', 'FontColor', [0.4 0.6 0.6]);
+    lblDashSub.Layout.Row = 2;
     
     app.lblBanner = uilabel(tgl, 'Text', '', 'FontSize', 22, 'FontWeight', 'bold', 'FontColor', [1 1 1], 'BackgroundColor', [0 0 0], 'HorizontalAlignment', 'center');
     app.lblBanner.Layout.Row = [1 2]; app.lblBanner.Layout.Column = 2;
