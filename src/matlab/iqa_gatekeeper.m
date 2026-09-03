@@ -17,23 +17,24 @@ function [processed_img, is_accepted, metrics, message] = iqa_gatekeeper(img_pat
         gray_img = img;
     end
     
-    % 1.5 Denoising (SIH Requirement)
-    % Apply median filter to remove salt-and-pepper sensor noise
-    gray_img = medfilt2(gray_img, [3 3]);
-    
-    % 1.7 Field of View (FOV) Validation (SIH Requirement)
-    % A valid fundus image should have a large illuminated circular area.
-    % We threshold the image to find the retina mask.
-    retina_mask = gray_img > 10; % Background is usually near 0
-    fov_ratio = sum(retina_mask(:)) / numel(retina_mask);
-    
     % 2. Calculate Laplacian Variance (Focus Metric)
+    % MUST be calculated before denoising, otherwise the variance drops artificially
     lap = fspecial('laplacian');
     img_lap = imfilter(double(gray_img), lap, 'replicate');
     variance_of_laplacian = var(img_lap(:));
     
+    % 1.5 Denoising (SIH Requirement)
+    % Apply median filter to remove salt-and-pepper sensor noise
+    denoised_img = medfilt2(gray_img, [3 3]);
+    
+    % 1.7 Field of View (FOV) Validation (SIH Requirement)
+    % A valid fundus image should have a large illuminated circular area.
+    % We threshold the image to find the retina mask.
+    retina_mask = denoised_img > 10; % Background is usually near 0
+    fov_ratio = sum(retina_mask(:)) / numel(retina_mask);
+    
     % 3. Calculate Mean Pixel Intensity (Illumination Metric)
-    mean_intensity = mean2(gray_img);
+    mean_intensity = mean2(denoised_img);
     
     % Pre-defined Statistical Thresholds (Derived from Python Script)
     BLUR_THRESHOLD = 4.49;
