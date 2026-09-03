@@ -89,10 +89,24 @@ Replaces dangerous "Black Box" AI with clinical decision support.
 - Automatically extracts the gradients from the final convolutional layer of the ResNet model to project a **Class Activation Map (Heatmap)** over the retina.
 - Uses **Dynamic Alpha Channeling** to render un-activated regions (healthy tissue) completely transparent, while highlighting the exact pixels (exudates, hemorrhages) that triggered the AI diagnosis in high-opacity red.
 
+<br>
+<div align="center">
+  <img src="docs/assets/dashboard.png" alt="Premium Clinical Dashboard" width="800">
+  <p><i>The eDRis Premium Dark Medical Dashboard displaying Grad-CAM Explanations and Regional ASHA Translations. (Note: Save your screenshot here!)</i></p>
+</div>
+<br>
+
 ### 4. Mathematical Telemedicine Simulation
 Built-in stochastic queuing simulation proving the necessity of Edge AI.
 - Simulates 4G Cloud-based AI (which transmits 5MB raw images) vs our Edge-Optimized AI (which only transmits 2KB string payloads for positive referrals).
 - Proves mathematically that Edge AI prevents queue bottlenecks and packet-loss failures in low-bandwidth rural environments.
+
+<br>
+<div align="center">
+  <img src="docs/assets/simulation.png" alt="Telemedicine Network Simulation" width="600">
+  <p><i>Real-time MATLAB graph comparing Edge AI vs Cloud AI bandwidth saturation. (Note: Save your screenshot here!)</i></p>
+</div>
+<br>
 
 ### 5. Localized ASHA Worker Integration (TTS)
 Designed for real-world deployment by Accredited Social Health Activists (ASHA) in rural India.
@@ -123,10 +137,18 @@ Designed for real-world deployment by Accredited Social Health Activists (ASHA) 
 
 ## 📊 Clinical Validation
 
-Tested against the APTOS 2019 holdout test split for Referable DR (Level 2+):
+Tested against the APTOS 2019 holdout test split for Referable DR (Level 2+). A built-in interactive ROC curve dashboard is available natively in the application (`View Clinical Validation` button).
+
 - **Sensitivity:** 93.4% *(Target >90%)*
 - **Specificity:** 89.2% *(Target >85%)*
 - **AUC-ROC:** 0.96
+
+<br>
+<div align="center">
+  <img src="docs/assets/roc_curve.png" alt="ROC Curve Validation" width="500">
+  <p><i>The native MATLAB ROC Validation Curve proving SIH metric compliance. (Note: Save your screenshot here!)</i></p>
+</div>
+<br>
 
 ## 📜 License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
