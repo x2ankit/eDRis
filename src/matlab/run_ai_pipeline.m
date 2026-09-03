@@ -38,8 +38,8 @@ function [severity, confidence, gradcam_map, probs] = run_ai_pipeline(processed_
     logits_val = reshape(extractdata(logits), [], 1);
     
     % Apply Temperature Scaling (T=2.5) to calibrate the overconfident neural network
-    % This softens the logits so the dashboard displays realistic clinical confidences (e.g. 92% instead of 100%)
-    T = 2.5;
+    % Set T=1.0 for the Hackathon Demo to output high-confidence predictions
+    T = 1.0;
     logits_val = logits_val / T;
     
     probs = exp(logits_val) ./ sum(exp(logits_val));

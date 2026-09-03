@@ -125,7 +125,8 @@ function virtual_clinic_app()
     % --- Nested Callbacks ---
     function uploadImage()
         % 1. Open File Dialog
-        [file, path] = uigetfile({'*.png;*.jpg;*.jpeg', 'Image Files (*.png, *.jpg, *.jpeg)'}, 'Upload Rural Fundus Image');
+        demo_path = fullfile('..', '..', 'datasets', 'demo_images', '*.*');
+        [file, path] = uigetfile({'*.png;*.jpg;*.jpeg', 'Image Files (*.png, *.jpg, *.jpeg)'}, 'Upload Rural Fundus Image', demo_path);
         if isequal(file, 0)
             return; % Canceled
         end
