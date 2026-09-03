@@ -66,11 +66,17 @@ function run_telemedicine_simulation()
         patients_per_day = 300; % MathWorks rural clinic average target
         image_size_mb = 5;      % 5 Megabytes per high-res fundus image
         
+        % Rural networks do not provide 100% theoretical throughput. 
+        % Due to packet loss, latency, and intermittent dropouts, we simulate a realistic efficiency.
+        rural_network_efficiency = 0.12; % 12% effective throughput uptime
+        
         % Network Math: 1 Mbps = 0.125 Megabytes per second
         % Upload rate per day in Megabytes (Assume 8 hour workday = 28800 seconds)
         mbps_to_mb_per_sec = 0.125;
         work_seconds_per_day = 8 * 3600;
-        max_upload_mb_per_day = speed * mbps_to_mb_per_sec * work_seconds_per_day;
+        
+        effective_mbps = speed * rural_network_efficiency;
+        max_upload_mb_per_day = effective_mbps * mbps_to_mb_per_sec * work_seconds_per_day;
         
         % Upload Capacity (Patients per day)
         upload_capacity_per_day = floor(max_upload_mb_per_day / image_size_mb);
