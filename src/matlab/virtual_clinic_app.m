@@ -210,6 +210,4 @@ function virtual_clinic_app()
         grid(axROC, 'on');
         legend(axROC, 'eDRis ResNet-18 (AUC = 0.96)', 'Random Guess', 'Location', 'southeast', 'TextColor', [0 0 0]);
     end
-endst');
-    end
 end
