@@ -20,7 +20,7 @@ function virtual_clinic_app()
     % Upload Button
     app.btnUpload = uibutton(app.sideGrid, 'Text', '📁 Upload Fundus Image', ...
         'FontSize', 14, 'FontWeight', 'bold', 'BackgroundColor', [0.2 0.6 0.3], 'FontColor', [1 1 1]);
-    app.btnUpload.ButtonPushedFcn = @(~, ~) uploadImage(app);
+    app.btnUpload.ButtonPushedFcn = @(~, ~) uploadImage();
     
     % Validation Button
     app.btnVal = uibutton(app.sideGrid, 'Text', '📊 View Clinical Validation', ...
@@ -89,7 +89,7 @@ function virtual_clinic_app()
     app.fig.UserData = app;
 
     % --- Nested Callbacks ---
-    function uploadImage(app)
+    function uploadImage()
         % 1. Open File Dialog
         [file, path] = uigetfile({'*.png;*.jpg;*.jpeg', 'Image Files (*.png, *.jpg, *.jpeg)'}, 'Upload Rural Fundus Image');
         if isequal(file, 0)
@@ -158,10 +158,10 @@ function virtual_clinic_app()
         end
         
         % Restore UI State
-        resetUI(app);
+        resetUI();
     end
 
-    function resetUI(app)
+    function resetUI()
         app.btnUpload.Text = '📁 Upload Fundus Image';
         app.btnUpload.Enable = 'on';
     end
