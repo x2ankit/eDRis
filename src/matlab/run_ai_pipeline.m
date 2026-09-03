@@ -72,6 +72,13 @@ function [severity, confidence, gradcam_map, probs] = run_ai_pipeline(processed_
         if max(gradcam_map(:)) > 0
             gradcam_map = gradcam_map / max(gradcam_map(:));
         end
+        
+        % CLINICAL UX FIX: If the eye is Level 0 (Healthy), there are no lesions to highlight.
+        % Grad-CAM will confusingly highlight the entire retina as "healthy features". 
+        % To prevent doctor confusion, we suppress the heatmap for healthy eyes.
+        if severity == 0
+            gradcam_map = zeros(size(gradcam_map));
+        end
     catch ME
         fprintf('   -> Grad-CAM warning: %s\n', ME.message);
         gradcam_map = zeros(inputSize); % Return empty if it fails
