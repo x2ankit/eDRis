@@ -45,14 +45,15 @@ function [severity, confidence, gradcam_map] = run_ai_pipeline(processed_img, mo
     % Find the last convolutional or ReLU layer name
     layers = net.Layers;
     last_conv_idx = find(arrayfun(@(l) isa(l, 'nnet.cnn.layer.Convolution2DLayer') || isa(l, 'nnet.cnn.layer.ReLULayer'), layers), 1, 'last');
+    reductionLayerName = layers(end).Name;
     
     try
         if isempty(last_conv_idx)
             % Fallback for some ONNX converted names
-            gradcam_map = gradCAM(net, dlImg, max_idx);
+            gradcam_map = gradCAM(net, dlImg, max_idx, 'ReductionLayer', reductionLayerName);
         else
             featureLayerName = layers(last_conv_idx).Name;
-            gradcam_map = gradCAM(net, dlImg, max_idx, 'FeatureLayer', featureLayerName);
+            gradcam_map = gradCAM(net, dlImg, max_idx, 'FeatureLayer', featureLayerName, 'ReductionLayer', reductionLayerName);
         end
     catch ME
         fprintf('   -> Grad-CAM warning: %s\n', ME.message);
