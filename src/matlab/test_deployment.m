@@ -53,24 +53,8 @@ else
         fprintf('   -> Diagnosis: Level %d (Severity)\n', severity);
         fprintf('   -> Confidence: %.2f%%\n\n', conf);
         
-        % Plotting the results
-        figure('Name', 'eDRis Clinical Dashboard');
-        
-        subplot(1,3,1);
-        imshow(imread(img_path));
-        title('Original Rural Capture');
-        
-        subplot(1,3,2);
-        imshow(clean_img);
-        title('Gatekeeper (CLAHE) Cleaned');
-        
-        subplot(1,3,3);
-        imshow(clean_img);
-        hold on;
-        imagesc(imresize(gradcam_map, [size(clean_img,1) size(clean_img,2)]), 'AlphaData', 0.5);
-        colormap jet;
-        hold off;
-        title(sprintf('Level %d (%.1f%%)', severity, conf));
+        % Launch the Premium Clinical Dashboard UI
+        render_premium_dashboard(img_path, clean_img, metrics, severity, conf, gradcam_map);
         
     catch ME
         fprintf('   -> Error running AI Pipeline: %s\n', ME.message);
