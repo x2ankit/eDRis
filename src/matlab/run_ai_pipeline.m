@@ -1,4 +1,4 @@
-function [severity, confidence, gradcam_map] = run_ai_pipeline(processed_img, model_path)
+function [severity, confidence, gradcam_map, probs] = run_ai_pipeline(processed_img, model_path)
 % RUN_AI_PIPELINE MathWorks SIH 26038 Compliance - Phase 3 & 4
 % Loads the PyTorch-trained ONNX model using MATLAB Deep Learning Toolbox,
 % runs inference to predict DR Severity, and generates Explainability maps.
