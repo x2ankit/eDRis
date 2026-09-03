@@ -45,18 +45,27 @@ function [severity, confidence, gradcam_map] = run_ai_pipeline(processed_img, mo
     % Find the last convolutional or ReLU layer name
     layers = net.Layers;
     last_conv_idx = find(arrayfun(@(l) isa(l, 'nnet.cnn.layer.Convolution2DLayer') || isa(l, 'nnet.cnn.layer.ReLULayer'), layers), 1, 'last');
-    reductionLayerName = layers(end).Name;
     
     try
+        % Define a custom reduction function to extract the logit of the predicted class
+        % This is required because PyTorch ONNX exports do not include a Softmax layer,
+        % so MATLAB treats it as a non-classification network.
+        reductionFcn = @(dlY) dlY(max_idx, :);
+        
         if isempty(last_conv_idx)
-            % Fallback for some ONNX converted names
-            gradcam_map = gradCAM(net, dlImg, max_idx, 'ReductionLayer', reductionLayerName);
+            gradcam_map = gradCAM(net, dlImg, reductionFcn);
         else
             featureLayerName = layers(last_conv_idx).Name;
-            gradcam_map = gradCAM(net, dlImg, max_idx, 'FeatureLayer', featureLayerName, 'ReductionLayer', reductionLayerName);
+            gradcam_map = gradCAM(net, dlImg, reductionFcn, 'FeatureLayer', featureLayerName);
+        end
+        
+        % Normalize the heatmap between 0 and 1 so it renders perfectly
+        gradcam_map = extractdata(gradcam_map);
+        if max(gradcam_map(:)) > 0
+            gradcam_map = gradcam_map / max(gradcam_map(:));
         end
     catch ME
         fprintf('   -> Grad-CAM warning: %s\n', ME.message);
-        gradcam_map = zeros(inputSize);
+        gradcam_map = zeros(inputSize); % Return empty if it fails
     end
 end
