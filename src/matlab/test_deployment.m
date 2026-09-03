@@ -8,7 +8,7 @@ fprintf('=== eDRis MATLAB Deployment Pipeline ===\n\n');
 
 % 1. Pick a test image (Simulating rural clinic capture)
 % For testing, we use one of our previously processed/test images or any valid dataset image
-img_path = '..\datasets\1. Classification - APTOS\train_images\000c1434d8d7.png';
+img_path = '..\..\datasets\1. Classification - APTOS\train_images\000c1434d8d7.png';
 
 % Fallback if file doesn't exist (just to ensure script doesn't crash if they haven't downloaded it)
 if ~isfile(img_path)
@@ -33,7 +33,7 @@ if ~is_accepted
 end
 
 fprintf('2. Running Phase 3 & 4: Dual AI Engine & XAI...\n');
-model_path = '..\..\models\dr_resnet50.onnx'; % Path to your exported ONNX model
+model_path = '..\..\models\dr_resnet18_merged.onnx'; % Path to your exported ONNX model
 
 if ~isfile(model_path)
     fprintf('   -> Model not found at %s.\n', model_path);
