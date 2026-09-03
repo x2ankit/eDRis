@@ -34,7 +34,9 @@ function [severity, confidence, gradcam_map] = run_ai_pipeline(processed_img, mo
     logits = predict(net, dlImg);
     
     % Convert logits to probabilities using softmax
-    probs = exp(extractdata(logits)) ./ sum(exp(extractdata(logits)));
+    % Reshape safely to a vector to avoid any [1x5] vs [5x1] dimension mismatch
+    logits_val = reshape(extractdata(logits), [], 1);
+    probs = exp(logits_val) ./ sum(exp(logits_val));
     
     % Extract severity and confidence (0-indexed for DR levels)
     [max_prob, max_idx] = max(probs);
@@ -45,18 +47,18 @@ function [severity, confidence, gradcam_map] = run_ai_pipeline(processed_img, mo
     % Find the last convolutional or ReLU layer name
     layers = net.Layers;
     last_conv_idx = find(arrayfun(@(l) isa(l, 'nnet.cnn.layer.Convolution2DLayer') || isa(l, 'nnet.cnn.layer.ReLULayer'), layers), 1, 'last');
+    reductionLayerName = layers(end).Name;
     
     try
-        % Define a custom reduction function to extract the logit of the predicted class
-        % This is required because PyTorch ONNX exports do not include a Softmax layer,
-        % so MATLAB treats it as a non-classification network.
-        reductionFcn = @(dlY) dlY(max_idx, :);
+        % Extremely robust reduction function: just take the maximum logit directly!
+        % This completely avoids any matrix shape or index-out-of-bounds errors.
+        reductionFcn = @(dlY) max(dlY, [], 'all');
         
         if isempty(last_conv_idx)
-            gradcam_map = gradCAM(net, dlImg, reductionFcn);
+            gradcam_map = gradCAM(net, dlImg, reductionFcn, 'ReductionLayer', reductionLayerName);
         else
             featureLayerName = layers(last_conv_idx).Name;
-            gradcam_map = gradCAM(net, dlImg, reductionFcn, 'FeatureLayer', featureLayerName);
+            gradcam_map = gradCAM(net, dlImg, reductionFcn, 'FeatureLayer', featureLayerName, 'ReductionLayer', reductionLayerName);
         end
         
         % Normalize the heatmap between 0 and 1 so it renders perfectly
