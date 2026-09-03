@@ -60,6 +60,13 @@ function [processed_img, is_accepted, metrics, message] = iqa_gatekeeper(img_pat
         return;
     end
     
+    if variance_of_laplacian > 5000
+        % Reject random noise or non-retinal images (they have massive variance)
+        is_accepted = false;
+        message = sprintf('REJECTED: Image appears to be random noise or out of context (Variance: %.2f).', variance_of_laplacian);
+        return;
+    end
+    
     if mean_intensity < DARK_THRESHOLD || mean_intensity > BRIGHT_THRESHOLD
         % Borderline Lighting - Rescue via CLAHE
         is_accepted = true;

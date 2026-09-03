@@ -132,7 +132,17 @@ function virtual_clinic_app()
         end
         img_path = fullfile(path, file);
         
-        % Show Loading State
+        % Show Loading State and Hide Old Data
+        app.pnlHeader.Visible = 'off';
+        app.pnlPatient.Visible = 'off';
+        app.pnlQC.Visible = 'off';
+        app.pnlGauge.Visible = 'off';
+        app.pnlChart.Visible = 'off';
+        app.ax1.Visible = 'off'; app.ax2.Visible = 'off'; app.ax3.Visible = 'off';
+        app.lblInteract.Visible = 'off';
+        
+        app.lblWelcome.Text = '⏳ PROCESSING AI PIPELINE... PLEASE WAIT...';
+        app.lblWelcome.Visible = 'on';
         app.btnUpload.Text = '⏳ PROCESSING PIPELINE...';
         app.btnUpload.Enable = 'off';
         drawnow;
@@ -191,7 +201,8 @@ function virtual_clinic_app()
             % We display it on the main axes using hold on/imagesc
             imshow(clean_img, 'Parent', app.ax3);
             hold(app.ax3, 'on');
-            h3_heatmap = imagesc(app.ax3, heatmap_resized, 'AlphaData', 0.5);
+            % Multiply heatmap by 0.7 to make blue areas transparent and red areas opaque
+            h3_heatmap = imagesc(app.ax3, heatmap_resized, 'AlphaData', heatmap_resized * 0.7);
             colormap(app.ax3, 'jet');
             hold(app.ax3, 'off');
             title(app.ax3, 'PHASE 4: EXPLAINABILITY (GRAD-CAM)', 'FontSize', 14, 'Color', [0.2 0.8 0.8]);
