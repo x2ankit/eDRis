@@ -119,21 +119,21 @@ Designed for real-world deployment by Accredited Social Health Activists (ASHA) 
 ## 📸 System UI Screenshots
 
 <div align="center">
-  <img src="docs/assets/dashboard.png" alt="Premium Clinical Dashboard" width="800">
+  <img src="docs/images/matlab-Proliferative_Referable.png" alt="Premium Clinical Dashboard" width="800">
   <p><i>The eDRis Premium Dark Medical Dashboard displaying dynamic Grad-CAM Explanations, AI Probability Distributions, and Regional ASHA Translations.</i></p>
 </div>
 
 <br>
 
 <div align="center">
-  <img src="docs/assets/simulation.png" alt="Telemedicine Network Simulation" width="600">
+  <img src="docs/images/simulink_simulation.png" alt="Telemedicine Network Simulation" width="600">
   <p><i>Real-time MATLAB Queue Simulation mathematically proving the bottleneck of Cloud-AI versus the scalability of eDRis Edge-AI in low-bandwidth rural conditions.</i></p>
 </div>
 
 <br>
 
 <div align="center">
-  <img src="docs/assets/roc_curve.png" alt="ROC Curve Validation" width="500">
+  <img src="docs/images/roc_curve.png" alt="ROC Curve Validation" width="500">
   <p><i>Native MATLAB ROC Validation Curve proving SIH metric compliance.</i></p>
 </div>
 
