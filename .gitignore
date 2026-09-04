@@ -39,3 +39,4 @@ kaggle.json
 
 # Jupyter
 .ipynb_checkpoints/
+*.rar
